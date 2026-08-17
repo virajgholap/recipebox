@@ -68,15 +68,26 @@ export const SORT_OPTIONS = [
   { value: 'cookTime', label: 'Cook time' },
 ]
 
+export const CUISINE_OPTIONS = [
+  { value: 'all', label: 'All' },
+  { value: 'indian', label: 'Indian' },
+  { value: 'mexican', label: 'Mexican' },
+  { value: 'other', label: 'Everything else' },
+]
+
 /**
- * Filter by tags, then sort. Selected tags combine with AND: a recipe has to
- * carry every one of them. An empty list means no filter.
+ * Filter by cuisine and tags, then sort. Selected tags combine with AND: a
+ * recipe has to carry every one of them. An empty list means no tag filter,
+ * and a cuisine of 'all' means no cuisine filter.
  */
-export function filterAndSortRecipes(collection, { tags = [], sort = 'recent' } = {}) {
-  const filtered =
-    tags.length > 0
-      ? collection.filter((recipe) => tags.every((tag) => recipe.tags.includes(tag)))
-      : [...collection]
+export function filterAndSortRecipes(
+  collection,
+  { tags = [], cuisine = 'all', sort = 'recent' } = {},
+) {
+  const filtered = collection.filter((recipe) => {
+    if (cuisine !== 'all' && recipe.cuisine !== cuisine) return false
+    return tags.every((tag) => recipe.tags.includes(tag))
+  })
 
   return filtered.sort((a, b) => {
     if (sort === 'cookTime') {

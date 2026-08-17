@@ -7,7 +7,7 @@ import RecipeHero from './RecipeHero'
 import IngredientList from './IngredientList'
 import StepList from './StepList'
 import ServingStepper from './ServingStepper'
-import usePersistentState from '../hooks/usePersistentState'
+import useRecipeProgress from '../hooks/useRecipeProgress'
 import { formatCookTime, getRecipeBadges } from '../lib/recipes'
 import { scaleIngredient } from '../lib/ingredients'
 import './RecipeDetail.css'
@@ -17,16 +17,12 @@ import './RecipeDetail.css'
  *
  * The recipe as something you cook from, not just something you saved.
  *
- * Mount this keyed on `recipe.id` — the persisted progress hook reads its
- * storage key once on mount, so a remount per recipe is what keeps one
- * recipe's checked ingredients from leaking into another's.
+ * Mount this keyed on `recipe.id` — the progress hook reads its stored state
+ * once on mount, so a remount per recipe is what keeps one recipe's checked
+ * ingredients from leaking into another's.
  */
 export default function RecipeDetail({ recipe, onClose }) {
-  const [progress, setProgress] = usePersistentState(`recipe-box:progress:${recipe.id}`, {
-    servings: recipe.servings,
-    checked: [],
-    done: [],
-  })
+  const [progress, setProgress, sync] = useRecipeProgress(recipe)
 
   const [cookMode, setCookMode] = useState(false)
   const [currentStep, setCurrentStep] = useState(0)
@@ -144,6 +140,11 @@ export default function RecipeDetail({ recipe, onClose }) {
             />
 
             <div className="recipe-detail__toolbar-actions">
+              {sync.synced ? (
+                <span className="recipe-detail__sync" title="Your progress is saved to your account">
+                  {sync.syncing ? 'Syncing…' : 'Synced'}
+                </span>
+              ) : null}
               {checkedCount + doneCount > 0 ? (
                 <Button variant="ghost" size="sm" onClick={resetProgress}>
                   Reset

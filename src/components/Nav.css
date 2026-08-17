@@ -54,13 +54,15 @@
 }
 
 .nav__link {
+  display: inline-block;
   padding: var(--space-2) var(--space-3);
   background: none;
-  border: 0;
+  border: 1px solid transparent;
   border-radius: var(--radius-md);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
+  text-decoration: none;
   cursor: pointer;
   transition: background-color var(--transition-fast), color var(--transition-fast);
 }
@@ -73,6 +75,6 @@
 .nav__link--active,
 .nav__link--active:hover {
   background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
+  border-color: var(--color-border);
   color: var(--color-text);
 }

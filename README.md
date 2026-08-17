@@ -22,11 +22,24 @@ npm install
 npm run dev
 ```
 
-Vite serves on <http://localhost:5173>.
+Vite serves on <http://localhost:5173>. It runs with no configuration at all — without Supabase credentials the app uses the bundled seed data and hides the account UI.
+
+To enable accounts and cross-device sync, copy `.env.example` to `.env.local` and fill in your Supabase project URL and anon key. Full setup, including Google sign-in, is in [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ## Stack
 
-React 19 and Vite. No router, no state library, no CSS framework, no backend. State is `useState` in the page component; data is a JavaScript file.
+React 19, Vite, React Router, and Supabase for auth and data. No state library, no CSS framework, no UI kit.
+
+Recipes come from Postgres in production and fall back to `src/data/recipes.js` when Supabase is unreachable or unconfigured. Cook progress is per user in Postgres when signed in, and localStorage when not — signing in for the first time carries your local progress up rather than discarding it.
+
+## Routes
+
+| Route | What it is |
+| --- | --- |
+| `/` | The recipe grid |
+| `/recipe/:id` | Same grid with that recipe open — a recipe is a shareable link |
+| `/login`, `/signup` | Google or email and password |
+| `/auth/callback` | Where Google returns to |
 
 ## How the styling works
 
@@ -114,7 +127,9 @@ Underneath each photo is the generated gradient, seeded from the recipe's `hue`.
 
 ## The mix
 
-Ten of the twelve recipes are vegetarian. The two that aren't are Garlic Butter Shrimp Scampi and Birria-Style Beef Tacos. Cuisines skew Indian and Mexican among the vegetarian ones — chana masala, dal makhani, enchiladas verdes, black bean tacos.
+Twenty recipes: 12 Indian, 4 Mexican, 4 everything else. Sixteen of the twenty are vegetarian — exactly 80%. The four that are not are Butter Chicken, Lamb Rogan Josh, Birria-Style Beef Tacos, and Garlic Butter Shrimp Scampi.
+
+`npm run seed:generate` prints the split, so the counts above are checkable rather than a claim.
 
 ## Deliberately not built
 

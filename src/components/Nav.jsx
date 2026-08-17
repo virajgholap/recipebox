@@ -1,36 +1,36 @@
+import { Link } from 'react-router-dom'
 import Icon from './Icon'
 import './Nav.css'
 
 /**
  * Nav
  *
- * The app bar. `items` is a list of `{ id, label }`; the one matching
+ * The app bar. `items` is a list of `{ id, label, to }`; the one matching
  * `activeId` renders as current. `actions` is a right-side slot.
  */
-export default function Nav({ items = [], activeId, onNavigate, actions }) {
+export default function Nav({ items = [], activeId, actions }) {
   return (
     <nav className="nav" aria-label="Main">
       <div className="layout nav__inner">
-        <a className="nav__brand" href="#/">
+        <Link className="nav__brand" to="/">
           <span className="nav__brand-mark" aria-hidden="true">
             <Icon name="bowl" size={18} />
           </span>
           <span className="nav__brand-text">Recipe Box</span>
-        </a>
+        </Link>
 
         <ul className="nav__links">
           {items.map((item) => {
             const isActive = item.id === activeId
             return (
               <li key={item.id}>
-                <button
-                  type="button"
+                <Link
+                  to={item.to ?? '/'}
                   className={`nav__link ${isActive ? 'nav__link--active' : ''}`.trim()}
                   aria-current={isActive ? 'page' : undefined}
-                  onClick={() => onNavigate?.(item.id)}
                 >
                   {item.label}
-                </button>
+                </Link>
               </li>
             )
           })}
