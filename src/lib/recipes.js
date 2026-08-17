@@ -68,6 +68,53 @@ export const SORT_OPTIONS = [
   { value: 'cookTime', label: 'Cook time' },
 ]
 
+/**
+ * Where "find the original" points.
+ *
+ * The seed recipes are written for this demo — there is no real Instagram post
+ * behind them, and inventing permalinks produced twenty links that 404'd. So
+ * the link is computed rather than stored: a genuine search on the platform the
+ * recipe claims to come from, and the label says "find" rather than pretending
+ * to be the original post.
+ *
+ * When real link extraction exists, store the real permalink and return it here
+ * instead.
+ */
+export function getSourceLink(recipe) {
+  // A recipe someone added themselves has a real permalink — they pasted it.
+  if (recipe.sourceUrl) {
+    return { url: recipe.sourceUrl, label: 'View original' }
+  }
+
+  const query = `${recipe.name} recipe`
+
+  switch (recipe.source.type) {
+    case 'youtube':
+      return {
+        url: `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`,
+        label: 'Find it on YouTube',
+      }
+    case 'tiktok':
+      return {
+        url: `https://www.tiktok.com/search?q=${encodeURIComponent(query)}`,
+        label: 'Find it on TikTok',
+      }
+    case 'instagram':
+      // Keyword search rather than a hashtag: collapsing a multi-word dish into
+      // #charredcornandblackbeantacos gives a page that loads and shows nothing.
+      return {
+        url: `https://www.instagram.com/explore/search/keyword/?q=${encodeURIComponent(query)}`,
+        label: 'Find it on Instagram',
+      }
+    case 'blog':
+    default:
+      return {
+        url: `https://${recipe.source.label}`,
+        label: `Open ${recipe.source.label}`,
+      }
+  }
+}
+
 export const CUISINE_OPTIONS = [
   { value: 'all', label: 'All' },
   { value: 'indian', label: 'Indian' },

@@ -1,8 +1,8 @@
-/**
+﻿/**
  * Seed data.
  *
  * Twenty recipes, as if they had already been extracted from the link you
- * pasted. There is no parser — this file is the parser's output.
+ * pasted. There is no parser â€” this file is the parser's output.
  *
  * In production these rows live in Supabase (see supabase/migrations). This
  * file is the seed source for that table and the offline fallback when the app
@@ -14,7 +14,9 @@
  *   blurb              one line, the reason you saved it
  *   cuisine            'indian' | 'mexican' | 'other'
  *   source             { type: 'instagram' | 'tiktok' | 'youtube' | 'blog', label }
- *   sourceUrl          where it came from
+ *                      No permalink is stored. These are demo recipes with no
+ *                      real post behind them, so the outbound link is computed
+ *                      by getSourceLink() in lib/recipes rather than invented.
  *   cookTimeMinutes    total time, used for badges and sorting
  *   servings           yield the quantities below are written for
  *   hue                0-360, seeds the generated hero art behind the photo
@@ -37,7 +39,6 @@ export const recipes = [
     blurb: 'A pantry curry that tastes like it took considerably longer than it did.',
     cuisine: 'indian',
     source: { type: 'blog', label: 'smittenkitchen.com' },
-    sourceUrl: 'https://smittenkitchen.com/seed-chana-masala',
     cookTimeMinutes: 45,
     servings: 4,
     hue: 32,
@@ -60,7 +61,7 @@ export const recipes = [
       { quantity: 0.5, unit: 'bunch', item: 'cilantro', category: 'produce' },
     ],
     steps: [
-      'Cook the finely diced onion in the oil over medium heat far longer than feels necessary — 12 minutes, until it is genuinely brown at the edges. This is where the depth comes from.',
+      'Cook the finely diced onion in the oil over medium heat far longer than feels necessary â€” 12 minutes, until it is genuinely brown at the edges. This is where the depth comes from.',
       'Add the grated garlic and ginger and cook until the raw smell goes, about a minute.',
       'Add the cumin, coriander, and turmeric and stir constantly for thirty seconds so they toast without catching.',
       'Pour in the tomatoes and cook until the oil separates and pools at the edge of the pan. Do not rush this.',
@@ -74,7 +75,6 @@ export const recipes = [
     blurb: 'Hours of low heat and an unapologetic amount of butter. Better on day two.',
     cuisine: 'indian',
     source: { type: 'youtube', label: 'YouTube' },
-    sourceUrl: 'https://www.youtube.com/watch?v=seed-dal-makhani',
     cookTimeMinutes: 165,
     servings: 6,
     hue: 22,
@@ -111,7 +111,6 @@ export const recipes = [
     blurb: 'Blanch the spinach, do not boil it. That is the whole trick to the colour.',
     cuisine: 'indian',
     source: { type: 'youtube', label: 'YouTube' },
-    sourceUrl: 'https://www.youtube.com/watch?v=seed-palak-paneer',
     cookTimeMinutes: 40,
     servings: 4,
     hue: 128,
@@ -133,10 +132,10 @@ export const recipes = [
     ],
     steps: [
       'Blanch the spinach in boiling water for exactly 60 seconds, then plunge it into ice water. Skipping the ice bath is why most palak paneer turns army green.',
-      'Squeeze the spinach dry and blend with the green chillies to a coarse purée — not a smooth one.',
+      'Squeeze the spinach dry and blend with the green chillies to a coarse purÃ©e â€” not a smooth one.',
       'Cube the paneer and fry it in a little oil until the edges catch. Move it to a bowl of warm salted water so it stays soft.',
       'In the same pan, cook the diced onion until translucent, then the garlic and ginger for a minute more.',
-      'Add the cumin, then the spinach purée. Cook only 5 minutes — long cooking dulls the colour and the flavour together.',
+      'Add the cumin, then the spinach purÃ©e. Cook only 5 minutes â€” long cooking dulls the colour and the flavour together.',
       'Stir in the cream, garam masala, and the drained paneer. Warm through and serve.',
     ],
   },
@@ -146,7 +145,6 @@ export const recipes = [
     blurb: 'Dry, not saucy. The cauliflower should have brown edges you can hear.',
     cuisine: 'indian',
     source: { type: 'tiktok', label: 'TikTok' },
-    sourceUrl: 'https://www.tiktok.com/@seed/video/aloogobi',
     cookTimeMinutes: 35,
     servings: 4,
     hue: 46,
@@ -168,7 +166,7 @@ export const recipes = [
     ],
     steps: [
       'Cut the cauliflower into florets and the potatoes into pieces the same size, so they finish together.',
-      'Heat the oil until it shimmers and add the cumin seeds. Wait for them to crackle — that is the temperature you want.',
+      'Heat the oil until it shimmers and add the cumin seeds. Wait for them to crackle â€” that is the temperature you want.',
       'Add the potatoes first and let them colour for 5 minutes before you touch them.',
       'Add the cauliflower, onion, garlic, and ginger with the turmeric and coriander. Toss to coat.',
       'Cover and cook on low 15 minutes, shaking the pan rather than stirring so the florets stay whole.',
@@ -181,7 +179,6 @@ export const recipes = [
     blurb: 'The Sunday lunch of half of north India, and it reheats better than it cooks.',
     cuisine: 'indian',
     source: { type: 'blog', label: 'seriouseats.com' },
-    sourceUrl: 'https://www.seriouseats.com/seed-rajma',
     cookTimeMinutes: 90,
     servings: 4,
     hue: 6,
@@ -203,7 +200,7 @@ export const recipes = [
     ],
     steps: [
       'Soak the kidney beans overnight, then simmer in fresh water 45 minutes until a bean crushes with no resistance between two fingers.',
-      'Brown the finely diced onion in the oil properly — 12 minutes at least. This is the entire backbone of the dish.',
+      'Brown the finely diced onion in the oil properly â€” 12 minutes at least. This is the entire backbone of the dish.',
       'Add the garlic and ginger, then the coriander and chilli powder.',
       'Add the tomatoes and cook until the oil separates out at the edges.',
       'Tip in the beans with a cup of their cooking liquid. Simmer 20 minutes, mashing some against the pot so the gravy thickens on its own.',
@@ -216,7 +213,6 @@ export const recipes = [
     blurb: 'Char the aubergine over a live flame or do not bother making it at all.',
     cuisine: 'indian',
     source: { type: 'instagram', label: 'Instagram' },
-    sourceUrl: 'https://www.instagram.com/p/seed-bharta',
     cookTimeMinutes: 50,
     servings: 4,
     hue: 288,
@@ -237,7 +233,7 @@ export const recipes = [
       { quantity: 0.5, unit: 'bunch', item: 'cilantro', category: 'produce' },
     ],
     steps: [
-      'Rub the aubergines with oil and blacken them directly over a gas flame, turning until the skin collapses and the whole thing sags — 15 minutes. An oven broiler is second best.',
+      'Rub the aubergines with oil and blacken them directly over a gas flame, turning until the skin collapses and the whole thing sags â€” 15 minutes. An oven broiler is second best.',
       'Let them cool enough to handle, then peel away the burnt skin and chop the flesh roughly. Do not rinse it; you would be washing off the smoke.',
       'Cook the diced onion in oil until golden, then add the garlic, ginger, and chillies.',
       'Add the chopped tomatoes and cumin and cook until completely broken down.',
@@ -251,7 +247,6 @@ export const recipes = [
     blurb: 'The batter ferments overnight. The cooking takes four minutes.',
     cuisine: 'indian',
     source: { type: 'youtube', label: 'YouTube' },
-    sourceUrl: 'https://www.youtube.com/watch?v=seed-dosa',
     cookTimeMinutes: 30,
     servings: 4,
     hue: 40,
@@ -274,7 +269,7 @@ export const recipes = [
       'Boil the potatoes until soft, then crush them roughly. Lumps are the point.',
       'Heat oil and pop the mustard seeds, then add the curry leaves, sliced onion, chillies, and ginger.',
       'Stir in the turmeric and the crushed potato with a splash of water and salt. Set this filling aside.',
-      'Get a flat pan properly hot, then wipe it with a halved onion dipped in oil — this is what stops the first dosa sticking.',
+      'Get a flat pan properly hot, then wipe it with a halved onion dipped in oil â€” this is what stops the first dosa sticking.',
       'Pour a ladle of batter in the centre and spiral outward with the back of the ladle in one continuous motion.',
       'Drizzle oil around the edge and cook until the underside is lacquered and lifts on its own. Spoon filling down the middle and fold.',
     ],
@@ -285,7 +280,6 @@ export const recipes = [
     blurb: 'Mash it far more aggressively than feels correct.',
     cuisine: 'indian',
     source: { type: 'tiktok', label: 'TikTok' },
-    sourceUrl: 'https://www.tiktok.com/@seed/video/pavbhaji',
     cookTimeMinutes: 45,
     servings: 4,
     hue: 14,
@@ -321,7 +315,6 @@ export const recipes = [
     blurb: 'Layered, not stirred. Stirring it makes very good rice and no biryani.',
     cuisine: 'indian',
     source: { type: 'youtube', label: 'YouTube' },
-    sourceUrl: 'https://www.youtube.com/watch?v=seed-veg-biryani',
     cookTimeMinutes: 75,
     servings: 6,
     hue: 38,
@@ -345,7 +338,7 @@ export const recipes = [
     ],
     steps: [
       'Slice the onions thin and fry them in oil in batches until genuinely brown and crisp. Drain on paper. These are not a garnish, they are a layer.',
-      'Soak the rice 30 minutes, then boil it in heavily salted water until it is 70% done — it should still snap in the middle. Drain immediately.',
+      'Soak the rice 30 minutes, then boil it in heavily salted water until it is 70% done â€” it should still snap in the middle. Drain immediately.',
       'Cook the carrots, beans, and peas with the garlic, ginger, biryani masala, and yogurt until thick and clinging.',
       'Warm the saffron in a little milk or water.',
       'Layer: vegetables, then rice, then fried onions and mint. Repeat, finishing with rice. Spoon the saffron over in streaks so the colour stays uneven.',
@@ -359,7 +352,6 @@ export const recipes = [
     blurb: 'Char the paneer first. Sauce alone will not get you there.',
     cuisine: 'indian',
     source: { type: 'instagram', label: 'Instagram' },
-    sourceUrl: 'https://www.instagram.com/p/seed-paneer-tikka',
     cookTimeMinutes: 50,
     servings: 4,
     hue: 10,
@@ -395,7 +387,6 @@ export const recipes = [
     blurb: 'The sauce wants more butter than you are comfortable adding. Add it.',
     cuisine: 'indian',
     source: { type: 'youtube', label: 'YouTube' },
-    sourceUrl: 'https://www.youtube.com/watch?v=seed-butter-chicken',
     cookTimeMinutes: 60,
     servings: 4,
     hue: 18,
@@ -432,7 +423,6 @@ export const recipes = [
     blurb: 'Kashmiri chilli for colour, not heat. Two and a half hours of patience.',
     cuisine: 'indian',
     source: { type: 'blog', label: 'seriouseats.com' },
-    sourceUrl: 'https://www.seriouseats.com/seed-rogan-josh',
     cookTimeMinutes: 150,
     servings: 6,
     hue: 354,
@@ -455,7 +445,7 @@ export const recipes = [
     steps: [
       'Brown the lamb hard in ghee in batches. Crowding the pot here costs you the entire dish.',
       'Cook the sliced onion in the same fat until deep brown, then add the garlic and ginger.',
-      'Take the pot off the heat before adding the Kashmiri chilli powder — it scorches in seconds and turns bitter.',
+      'Take the pot off the heat before adding the Kashmiri chilli powder â€” it scorches in seconds and turns bitter.',
       'Whisk the yogurt and add it a spoonful at a time, stirring constantly so it does not split.',
       'Return the lamb with the fennel, cardamom, bay, and just enough water to come halfway up.',
       'Cover and cook at the barest simmer for two hours, until the meat pulls off the bone under a spoon.',
@@ -470,7 +460,6 @@ export const recipes = [
     blurb: 'Built almost entirely from things already in the cupboard.',
     cuisine: 'mexican',
     source: { type: 'instagram', label: 'Instagram' },
-    sourceUrl: 'https://www.instagram.com/p/seed-corn-tacos',
     cookTimeMinutes: 25,
     servings: 4,
     hue: 76,
@@ -505,7 +494,6 @@ export const recipes = [
     blurb: 'The tomatillos do the work. The oven does the rest.',
     cuisine: 'mexican',
     source: { type: 'tiktok', label: 'TikTok' },
-    sourceUrl: 'https://www.tiktok.com/@seed/video/enchiladasverdes',
     cookTimeMinutes: 40,
     servings: 4,
     hue: 96,
@@ -527,12 +515,12 @@ export const recipes = [
       { quantity: 1, unit: 'whole', item: 'lime', category: 'produce' },
     ],
     steps: [
-      'Husk the tomatillos and broil them with the poblanos, half the onion, and the unpeeled garlic until blackened in patches — about 8 minutes.',
+      'Husk the tomatillos and broil them with the poblanos, half the onion, and the unpeeled garlic until blackened in patches â€” about 8 minutes.',
       'Peel the garlic and blend everything with the cilantro, cumin, lime juice, and salt into a loose green sauce.',
       'Warm the drained beans with the remaining diced onion and a little of the sauce, mashing lightly so they hold together in a tortilla.',
       'Soften the tortillas in oil, a few seconds a side, so they roll without cracking.',
       'Fill, roll, and pack them seam-side down in a baking dish. Pour the rest of the sauce over and cover with cheese.',
-      'Bake at 400°F for 20 minutes, until the sauce bubbles at the edges and the cheese browns in spots.',
+      'Bake at 400Â°F for 20 minutes, until the sauce bubbles at the edges and the cheese browns in spots.',
     ],
   },
   {
@@ -541,7 +529,6 @@ export const recipes = [
     blurb: 'Sweat the peppers in a covered bowl and the skins come away in sheets.',
     cuisine: 'mexican',
     source: { type: 'youtube', label: 'YouTube' },
-    sourceUrl: 'https://www.youtube.com/watch?v=seed-chiles-rellenos',
     cookTimeMinutes: 60,
     servings: 4,
     hue: 104,
@@ -572,10 +559,9 @@ export const recipes = [
   {
     id: 'birria-style-beef-tacos',
     name: 'Birria-Style Beef Tacos',
-    blurb: 'A four-hour Sunday that pays you back in consommé.',
+    blurb: 'A four-hour Sunday that pays you back in consommÃ©.',
     cuisine: 'mexican',
     source: { type: 'youtube', label: 'YouTube' },
-    sourceUrl: 'https://www.youtube.com/watch?v=seed-birria',
     cookTimeMinutes: 240,
     servings: 6,
     hue: 344,
@@ -600,8 +586,8 @@ export const recipes = [
       'Blend the softened chiles with the garlic, half the onion, vinegar, cumin, and enough soaking liquid to make a smooth paste.',
       'Brown the cubed chuck hard in a heavy pot, working in batches so it sears rather than steams.',
       'Return all the beef, pour over the chile paste, add the bay leaves and water to just cover.',
-      'Braise covered at 300°F for three hours, until the beef shreds under a fork.',
-      'Shred the meat and skim the fat off the broth — keep that fat, it is the point.',
+      'Braise covered at 300Â°F for three hours, until the beef shreds under a fork.',
+      'Shred the meat and skim the fat off the broth â€” keep that fat, it is the point.',
       'Dip each tortilla in the red fat, griddle it, and fill with beef and Oaxaca cheese until crisp. Serve the broth alongside for dipping.',
     ],
   },
@@ -613,7 +599,6 @@ export const recipes = [
     blurb: 'Breakfast that holds up perfectly well at nine at night.',
     cuisine: 'other',
     source: { type: 'tiktok', label: 'TikTok' },
-    sourceUrl: 'https://www.tiktok.com/@seed/video/shakshuka',
     cookTimeMinutes: 30,
     servings: 4,
     hue: 8,
@@ -648,7 +633,6 @@ export const recipes = [
     blurb: 'The work happens the night before. Morning you just turns on the oven.',
     cuisine: 'other',
     source: { type: 'youtube', label: 'YouTube' },
-    sourceUrl: 'https://www.youtube.com/watch?v=seed-cinnamon',
     cookTimeMinutes: 150,
     servings: 12,
     hue: 12,
@@ -671,10 +655,10 @@ export const recipes = [
     steps: [
       'Warm the milk to blood temperature and stir in the yeast and a spoonful of the sugar. Wait ten minutes for it to foam.',
       'Mix in the eggs, melted butter, remaining sugar, salt, and flour. Knead 8 minutes until smooth and slightly tacky.',
-      'Let it rise, covered, until doubled — roughly an hour.',
+      'Let it rise, covered, until doubled â€” roughly an hour.',
       'Roll into a large rectangle. Spread with softened butter, then brown sugar and cinnamon right to the edges.',
       'Roll up tightly, cut into twelve, and arrange in a buttered dish. Cover and refrigerate overnight.',
-      'In the morning, let them sit on the counter for an hour, then bake at 350°F for 25 to 30 minutes.',
+      'In the morning, let them sit on the counter for an hour, then bake at 350Â°F for 25 to 30 minutes.',
       'Beat the cream cheese with a little butter and sugar and spread it over while they are still warm.',
     ],
   },
@@ -684,7 +668,6 @@ export const recipes = [
     blurb: 'The dough does all the work overnight while you do none of it.',
     cuisine: 'other',
     source: { type: 'blog', label: 'kingarthurbaking.com' },
-    sourceUrl: 'https://www.kingarthurbaking.com/seed-focaccia',
     cookTimeMinutes: 90,
     servings: 8,
     hue: 108,
@@ -702,12 +685,12 @@ export const recipes = [
       { quantity: 2, unit: 'cup', item: 'warm water', category: 'pantry' },
     ],
     steps: [
-      'Stir the flour, yeast, salt, and warm water together into a shaggy, wet mess. No kneading — just make sure no dry flour remains.',
+      'Stir the flour, yeast, salt, and warm water together into a shaggy, wet mess. No kneading â€” just make sure no dry flour remains.',
       'Cover and refrigerate overnight, or leave at room temperature for four hours.',
       'Pour a generous slick of olive oil into a sheet pan and tip the dough in. Turn it once to coat.',
       'Let it relax and spread for an hour, until it fills the pan and wobbles.',
       'Dimple it all over with oiled fingertips, right down to the pan. Scatter rosemary and flaky salt.',
-      'Bake at 450°F for 25 minutes, until the top is blistered and the underside is crisp.',
+      'Bake at 450Â°F for 25 minutes, until the top is blistered and the underside is crisp.',
     ],
   },
   {
@@ -716,7 +699,6 @@ export const recipes = [
     blurb: 'Twenty minutes, one pan, and an indecent amount of garlic.',
     cuisine: 'other',
     source: { type: 'instagram', label: 'Instagram' },
-    sourceUrl: 'https://www.instagram.com/p/seed-scampi',
     cookTimeMinutes: 20,
     servings: 4,
     hue: 24,
@@ -738,7 +720,7 @@ export const recipes = [
     steps: [
       'Boil the linguine in well-salted water until just shy of al dente. Reserve a cup of the pasta water before draining.',
       'Pat the shrimp dry and season with salt. Sear in olive oil over high heat, about 90 seconds a side, then move to a plate.',
-      'Lower the heat. Melt the butter, add the sliced garlic and red pepper flakes, and cook until the garlic is fragrant but not coloured — about a minute.',
+      'Lower the heat. Melt the butter, add the sliced garlic and red pepper flakes, and cook until the garlic is fragrant but not coloured â€” about a minute.',
       'Pour in the white wine and scrape the pan. Let it reduce by half.',
       'Return the shrimp and pasta to the pan with a splash of pasta water. Toss until the sauce clings.',
       'Off the heat, finish with lemon juice, zest, and chopped parsley.',

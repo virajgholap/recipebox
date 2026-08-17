@@ -18,7 +18,6 @@ function fromRow(row) {
     blurb: row.blurb,
     cuisine: row.cuisine,
     source: row.source,
-    sourceUrl: row.source_url,
     cookTimeMinutes: row.cook_time_minutes,
     servings: row.servings,
     hue: row.hue,

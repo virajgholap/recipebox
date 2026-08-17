@@ -7,26 +7,33 @@ import SegmentedControl from '../components/SegmentedControl'
 import RecipeCard from '../components/RecipeCard'
 import RecipeDetail from '../components/RecipeDetail'
 import EmptyState from '../components/EmptyState'
+import Button from '../components/Button'
+import AddRecipeDialog from '../components/AddRecipeDialog'
 import { fetchRecipes } from '../lib/recipesRepo'
+import { fetchUserRecipes } from '../lib/userRecipes'
+import { useAuth } from '../context/AuthContext'
 import { CUISINE_OPTIONS, SORT_OPTIONS, filterAndSortRecipes, getTagOptions } from '../lib/recipes'
 import './MyRecipes.css'
 
 export default function MyRecipes() {
   const { recipeId } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuth()
 
-  const [allRecipes, setAllRecipes] = useState([])
+  const [catalogue, setCatalogue] = useState([])
+  const [mine, setMine] = useState([])
   const [status, setStatus] = useState('loading')
   const [activeTags, setActiveTags] = useState([])
   const [cuisine, setCuisine] = useState('all')
   const [sort, setSort] = useState('recent')
+  const [adding, setAdding] = useState(false)
 
   useEffect(() => {
     let active = true
 
     fetchRecipes().then(({ recipes }) => {
       if (!active) return
-      setAllRecipes(recipes)
+      setCatalogue(recipes)
       setStatus('ready')
     })
 
@@ -34,6 +41,28 @@ export default function MyRecipes() {
       active = false
     }
   }, [])
+
+  // Your own saves load separately — the catalogue should not wait on them,
+  // and signing in or out should refresh them without refetching everything.
+  useEffect(() => {
+    let active = true
+
+    if (!user) {
+      setMine([])
+      return undefined
+    }
+
+    fetchUserRecipes(user.id).then((recipes) => {
+      if (active) setMine(recipes)
+    })
+
+    return () => {
+      active = false
+    }
+  }, [user?.id])
+
+  // Yours first, so a recipe you just added is not buried under twenty others.
+  const allRecipes = useMemo(() => [...mine, ...catalogue], [mine, catalogue])
 
   const tagOptions = useMemo(() => getTagOptions(allRecipes), [allRecipes])
   const visible = useMemo(
@@ -75,7 +104,12 @@ export default function MyRecipes() {
         title="My Recipes"
         subtitle="Everything you saved and meant to cook, in one place you can actually search through."
         actions={
-          <SortControl options={SORT_OPTIONS} value={sort} onChange={setSort} label="Sort by" />
+          <>
+            <SortControl options={SORT_OPTIONS} value={sort} onChange={setSort} label="Sort by" />
+            <Button size="sm" onClick={() => setAdding(true)}>
+              Add recipe
+            </Button>
+          </>
         }
       />
 
@@ -130,6 +164,17 @@ export default function MyRecipes() {
       {openRecipe ? (
         <RecipeDetail key={openRecipe.id} recipe={openRecipe} onClose={() => navigate('/')} />
       ) : null}
+
+      <AddRecipeDialog
+        open={adding}
+        onClose={() => setAdding(false)}
+        onSaved={(recipe) => {
+          // Replace rather than prepend: re-adding a URL upserts, so the same
+          // recipe coming back should not appear twice.
+          setMine((current) => [recipe, ...current.filter((item) => item.id !== recipe.id)])
+          navigate(`/recipe/${recipe.id}`)
+        }}
+      />
     </main>
   )
 }

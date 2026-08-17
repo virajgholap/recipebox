@@ -7,12 +7,16 @@ import './AccountMenu.css'
 /**
  * AccountMenu
  *
- * Signed out: a Sign in link. Signed in: an avatar that opens a small menu.
- * When Supabase is not configured it renders nothing at all rather than a
- * button that leads to a dead end.
+ * Signed out: a Sign in link. Signed in: an avatar that opens a menu with
+ * Sign out in it.
+ *
+ * This used to render nothing when Supabase was unconfigured. That made a
+ * deployment with missing environment variables look like an app that simply
+ * has no accounts, rather than one that is misconfigured — so the control is
+ * always present now, and /login explains the situation if it cannot work.
  */
 export default function AccountMenu() {
-  const { user, loading, isConfigured, displayName, avatarUrl, signOut } = useAuth()
+  const { user, loading, displayName, avatarUrl, signOut } = useAuth()
   const [open, setOpen] = useState(false)
   const wrapperRef = useRef(null)
   const navigate = useNavigate()

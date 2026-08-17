@@ -8,7 +8,7 @@ import IngredientList from './IngredientList'
 import StepList from './StepList'
 import ServingStepper from './ServingStepper'
 import useRecipeProgress from '../hooks/useRecipeProgress'
-import { formatCookTime, getRecipeBadges } from '../lib/recipes'
+import { formatCookTime, getRecipeBadges, getSourceLink } from '../lib/recipes'
 import { scaleIngredient } from '../lib/ingredients'
 import './RecipeDetail.css'
 
@@ -36,6 +36,7 @@ export default function RecipeDetail({ recipe, onClose }) {
   )
 
   const badges = getRecipeBadges(recipe)
+  const sourceLink = getSourceLink(recipe)
   const titleId = `recipe-title-${recipe.id}`
 
   const checkedCount = progress.checked.length
@@ -112,12 +113,12 @@ export default function RecipeDetail({ recipe, onClose }) {
               </span>
               <a
                 className="recipe-detail__source-link"
-                href={recipe.sourceUrl}
+                href={sourceLink.url}
                 target="_blank"
-                rel="noreferrer"
+                rel="noreferrer noopener"
               >
                 <Icon name="link" size={14} />
-                View original
+                {sourceLink.label}
               </a>
             </div>
 

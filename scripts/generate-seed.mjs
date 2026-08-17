@@ -42,7 +42,6 @@ const rows = recipes.map((recipe) =>
     q(recipe.blurb),
     q(recipe.cuisine),
     json(recipe.source),
-    q(recipe.sourceUrl),
     recipe.cookTimeMinutes,
     recipe.servings,
     recipe.hue,
@@ -64,7 +63,7 @@ const sql = `-- Recipe Box — seed data
 -- Run this after supabase/migrations/0001_init.sql.
 
 insert into public.recipes (
-  id, name, blurb, cuisine, source, source_url, cook_time_minutes,
+  id, name, blurb, cuisine, source, cook_time_minutes,
   servings, hue, tags, one_pan, make_ahead, added_at, ingredients, steps
 ) values
 ${rows.map((row) => `  (${row})`).join(',\n')}
@@ -73,7 +72,6 @@ on conflict (id) do update set
   blurb             = excluded.blurb,
   cuisine           = excluded.cuisine,
   source            = excluded.source,
-  source_url        = excluded.source_url,
   cook_time_minutes = excluded.cook_time_minutes,
   servings          = excluded.servings,
   hue               = excluded.hue,

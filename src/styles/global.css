@@ -56,6 +56,13 @@ a {
   outline-offset: 2px;
 }
 
+/* Keeps the footer at the bottom on short pages instead of floating mid-screen. */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
 /* Shared layout shell used by every page. */
 .layout {
   width: 100%;

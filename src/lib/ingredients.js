@@ -50,16 +50,34 @@ export function formatQuantity(value) {
   return String(Math.round(value * 100) / 100)
 }
 
-/** Scale an ingredient's quantity by a factor, leaving everything else alone. */
+/**
+ * Scale an ingredient's quantity by a factor, leaving everything else alone.
+ * A string ingredient has no separable quantity to scale, so it passes through
+ * untouched rather than being silently mangled.
+ */
 export function scaleIngredient(ingredient, factor) {
-  return { ...ingredient, quantity: ingredient.quantity * factor }
+  const normalised = normaliseIngredient(ingredient)
+  if (normalised.quantity === null || normalised.quantity === undefined) return normalised
+  return { ...normalised, quantity: normalised.quantity * factor }
+}
+
+/**
+ * Ingredients arrive in two shapes. The curated catalogue has structured rows
+ * ({ quantity, unit, item, category }); a recipe extracted from a blog is a
+ * list of plain strings like "2 cups plain flour, sifted", because that is all
+ * schema.org gives you. Normalise so nothing downstream has to care which.
+ */
+export function normaliseIngredient(ingredient) {
+  if (typeof ingredient !== 'string') return ingredient
+  return { quantity: null, unit: '', item: ingredient, category: 'other' }
 }
 
 /**
  * Group ingredients into aisles, in CATEGORY_ORDER. Empty aisles are dropped,
  * and anything with an unknown category lands at the end rather than vanishing.
  */
-export function groupByCategory(ingredients) {
+export function groupByCategory(rawIngredients) {
+  const ingredients = rawIngredients.map(normaliseIngredient)
   const groups = new Map()
 
   for (const ingredient of ingredients) {
