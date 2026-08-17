@@ -19,6 +19,32 @@
 const TIMEOUT_MS = 10000
 const MAX_BYTES = 2_000_000
 
+// Crude per-IP throttle. This is per warm lambda instance, not global, so it
+// will not stop a determined attacker spread across regions — it stops one
+// client hammering the endpoint, which is the realistic case. Move to Upstash
+// or Supabase if this ever needs to hold under real load.
+const RATE_LIMIT = { windowMs: 60_000, max: 12 }
+const hits = new Map()
+
+function rateLimited(ip) {
+  const now = Date.now()
+  const seen = (hits.get(ip) ?? []).filter((time) => now - time < RATE_LIMIT.windowMs)
+
+  if (seen.length >= RATE_LIMIT.max) return true
+
+  seen.push(now)
+  hits.set(ip, seen)
+
+  // Keep the map from growing without bound on a long-lived instance.
+  if (hits.size > 5000) {
+    for (const [key, times] of hits) {
+      if (!times.some((time) => now - time < RATE_LIMIT.windowMs)) hits.delete(key)
+    }
+  }
+
+  return false
+}
+
 const BROWSER_UA =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'
 
@@ -26,6 +52,16 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST')
     return res.status(405).json({ error: 'Use POST.' })
+  }
+
+  const ip =
+    (req.headers['x-forwarded-for'] ?? '').split(',')[0].trim() ||
+    req.socket?.remoteAddress ||
+    'unknown'
+
+  if (rateLimited(ip)) {
+    res.setHeader('Retry-After', '60')
+    return res.status(429).json({ error: 'Too many requests. Wait a minute and try again.' })
   }
 
   const { url } = req.body ?? {}

@@ -162,7 +162,12 @@ export default function MyRecipes() {
       )}
 
       {openRecipe ? (
-        <RecipeDetail key={openRecipe.id} recipe={openRecipe} onClose={() => navigate('/')} />
+        <RecipeDetail
+          key={openRecipe.id}
+          recipe={openRecipe}
+          onClose={() => navigate('/')}
+          onDeleted={(id) => setMine((current) => current.filter((item) => item.id !== id))}
+        />
       ) : null}
 
       <AddRecipeDialog

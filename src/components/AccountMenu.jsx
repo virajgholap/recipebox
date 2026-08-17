@@ -85,6 +85,9 @@ export default function AccountMenu() {
             <strong>{displayName}</strong>
             <span>{user.email}</span>
           </div>
+          <Link className="account-menu__item" to="/account" role="menuitem" onClick={() => setOpen(false)}>
+            Account settings
+          </Link>
           <Button variant="ghost" size="sm" fullWidth onClick={handleSignOut} role="menuitem">
             Sign out
           </Button>

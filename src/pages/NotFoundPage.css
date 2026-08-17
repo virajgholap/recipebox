@@ -1,0 +1,12 @@
+.not-found {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--space-8);
+  padding-bottom: var(--space-8);
+}
+
+.not-found > * {
+  width: 100%;
+  max-width: 520px;
+}

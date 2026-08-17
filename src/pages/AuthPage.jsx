@@ -141,6 +141,12 @@ export default function AuthPage({ mode = 'login' }) {
                 {busy ? 'One moment…' : isSignup ? 'Create account' : 'Sign in'}
               </Button>
             </form>
+
+            {!isSignup ? (
+              <p className="auth-card__switch">
+                <Link to="/forgot-password">Forgot your password?</Link>
+              </p>
+            ) : null}
           </>
         )}
 

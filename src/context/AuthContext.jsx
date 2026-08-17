@@ -67,6 +67,31 @@ export function AuthProvider({ children }) {
     return { error }
   }, [])
 
+  /** Sends the recovery email. Supabase puts a recovery token in the link. */
+  const requestPasswordReset = useCallback(async (email) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    })
+    return { error }
+  }, [])
+
+  /**
+   * Called after arriving from that email. The client has already exchanged
+   * the token in the URL for a session, so this is an ordinary password change.
+   */
+  const updatePassword = useCallback(async (password) => {
+    const { error } = await supabase.auth.updateUser({ password })
+    return { error }
+  }, [])
+
+  /** Runs the security-definer function from migration 0003, then signs out. */
+  const deleteAccount = useCallback(async () => {
+    const { error } = await supabase.rpc('delete_own_account')
+    if (error) return { error }
+    await supabase.auth.signOut()
+    return { error: null }
+  }, [])
+
   const user = session?.user ?? null
 
   const value = useMemo(
@@ -86,8 +111,22 @@ export function AuthProvider({ children }) {
       signInWithEmail,
       signInWithGoogle,
       signOut,
+      requestPasswordReset,
+      updatePassword,
+      deleteAccount,
     }),
-    [session, user, loading, signUpWithEmail, signInWithEmail, signInWithGoogle, signOut],
+    [
+      session,
+      user,
+      loading,
+      signUpWithEmail,
+      signInWithEmail,
+      signInWithGoogle,
+      signOut,
+      requestPasswordReset,
+      updatePassword,
+      deleteAccount,
+    ],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

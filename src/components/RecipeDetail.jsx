@@ -10,6 +10,7 @@ import ServingStepper from './ServingStepper'
 import useRecipeProgress from '../hooks/useRecipeProgress'
 import { formatCookTime, getRecipeBadges, getSourceLink } from '../lib/recipes'
 import { scaleIngredient } from '../lib/ingredients'
+import { deleteUserRecipe } from '../lib/userRecipes'
 import './RecipeDetail.css'
 
 /**
@@ -21,11 +22,28 @@ import './RecipeDetail.css'
  * once on mount, so a remount per recipe is what keeps one recipe's checked
  * ingredients from leaking into another's.
  */
-export default function RecipeDetail({ recipe, onClose }) {
+export default function RecipeDetail({ recipe, onClose, onDeleted }) {
   const [progress, setProgress, sync] = useRecipeProgress(recipe)
 
   const [cookMode, setCookMode] = useState(false)
   const [currentStep, setCurrentStep] = useState(0)
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+
+  async function handleDelete() {
+    setDeleting(true)
+    const { error } = await deleteUserRecipe(recipe.id)
+    setDeleting(false)
+
+    if (error) {
+      console.warn('[recipe-box] Could not remove recipe:', error.message)
+      setConfirmingDelete(false)
+      return
+    }
+
+    onDeleted?.(recipe.id)
+    onClose()
+  }
 
   const servings = progress.servings ?? recipe.servings
   const factor = servings / recipe.servings
@@ -141,6 +159,23 @@ export default function RecipeDetail({ recipe, onClose }) {
             />
 
             <div className="recipe-detail__toolbar-actions">
+              {recipe.isUserRecipe ? (
+                confirmingDelete ? (
+                  <>
+                    <span className="recipe-detail__confirm">Remove this recipe?</span>
+                    <Button variant="ghost" size="sm" onClick={() => setConfirmingDelete(false)}>
+                      Keep
+                    </Button>
+                    <Button size="sm" disabled={deleting} onClick={handleDelete}>
+                      {deleting ? 'Removing…' : 'Remove'}
+                    </Button>
+                  </>
+                ) : (
+                  <Button variant="ghost" size="sm" onClick={() => setConfirmingDelete(true)}>
+                    Remove
+                  </Button>
+                )
+              ) : null}
               {sync.synced ? (
                 <span className="recipe-detail__sync" title="Your progress is saved to your account">
                   {sync.syncing ? 'Syncing…' : 'Synced'}

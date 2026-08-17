@@ -109,6 +109,12 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.recipe-detail__confirm {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
 }
 
 .recipe-detail__sync {
