@@ -1,5 +1,11 @@
 # Recipe Box
 
+> **Branch note.** `main` is the app exactly as briefed: one page, no detail
+> view, ingredients present in the data and invisible in the UI. This branch
+> (`feature/recipe-detail`) deliberately breaks that — it adds the recipe detail
+> view, cook mode, and dark mode. If you are here for the design-tool
+> comparison, you want `main`.
+
 A recipe box for the links you saved and never found again.
 
 Short-form video is how most people discover food now, and the recipe usually only exists inside the video. So everyone has a recipe graveyard: saved reels, screenshots, a bookmark folder nobody opens. Saving was never the hard part. Finding is.
@@ -41,7 +47,15 @@ Each component owns a CSS file next to it. No inline styles, no one-off classes 
 | `SortControl` | [`src/components/SortControl.jsx`](src/components/SortControl.jsx) | Labelled native select |
 | `Nav` | [`src/components/Nav.jsx`](src/components/Nav.jsx) | App bar |
 | `Icon` | [`src/components/Icon.jsx`](src/components/Icon.jsx) | Small inline set, inherits `currentColor` |
-| `RecipeCard` | [`src/components/RecipeCard.jsx`](src/components/RecipeCard.jsx) | One recipe in the grid, composed from `Card` and `Badge` |
+| `SegmentedControl` | [`src/components/SegmentedControl.jsx`](src/components/SegmentedControl.jsx) | Two or three exclusive options, all visible |
+| `Modal` | [`src/components/Modal.jsx`](src/components/Modal.jsx) | Portalled dialog: scroll lock, focus trap, Escape, bottom sheet under 700px |
+| `ThemeToggle` | [`src/components/ThemeToggle.jsx`](src/components/ThemeToggle.jsx) | Writes `data-theme` on the root element |
+| `RecipeHero` | [`src/components/RecipeHero.jsx`](src/components/RecipeHero.jsx) | Generated art, seeded from the recipe's `hue` |
+| `RecipeCard` | [`src/components/RecipeCard.jsx`](src/components/RecipeCard.jsx) | One recipe in the grid, composed from `Card`, `Badge` and `RecipeHero` |
+| `RecipeDetail` | [`src/components/RecipeDetail.jsx`](src/components/RecipeDetail.jsx) | The recipe as something you cook from |
+| `IngredientList` | [`src/components/IngredientList.jsx`](src/components/IngredientList.jsx) | Grouped by aisle, checkable |
+| `StepList` | [`src/components/StepList.jsx`](src/components/StepList.jsx) | Numbered steps, checkable, dims in cook mode |
+| `ServingStepper` | [`src/components/ServingStepper.jsx`](src/components/ServingStepper.jsx) | Rescales every quantity |
 
 ## Badges
 
@@ -60,6 +74,24 @@ Tag chips are multi-select and combine with **AND**. Picking `Vegetarian` and `W
 
 Sort is by recently added (default) or cook time.
 
+## The detail view
+
+Click any card. What is in there, and where it came from:
+
+**Ingredients grouped by aisle** — produce, then meat and seafood, dairy, bakery, pantry, spices. That is roughly the walk through a shop rather than alphabetical order, which is the part of Paprika people actually praise. Tap a line to strike it through.
+
+**Cook mode** — borrowed wholesale from Mela. Every step but the current one dims to 32%, the current step grows to 22px, and completing a step advances you to the next. There is a step counter and prev/next in the footer.
+
+**Serving scaling** — change the yield and every quantity rescales, rendered as real fractions (`5¼ tbsp`, not `5.25`). See `formatQuantity` in [`src/lib/ingredients.js`](src/lib/ingredients.js); it only snaps to a fraction within a 0.02 tolerance, so a scale-by-thirds degrades to a decimal instead of lying to you.
+
+**Progress survives a reload** — checked ingredients, completed steps, and your chosen yield are kept in `localStorage` per recipe. Losing your place because your phone locked is the most annoying failure a recipe app has.
+
+**Editorial typography** — serif headline scale over sans body, the NYT Cooking approach: the recipe reads as an article, not a form.
+
+## Dark mode
+
+Every colour is a token, so dark mode is one override block in [`tokens.css`](src/styles/tokens.css) and nothing else. The toggle starts from `prefers-color-scheme` and remembers an explicit choice.
+
 ## The data
 
 [`src/data/recipes.js`](src/data/recipes.js) holds twelve recipes, seeded as if a parser had already run. There is no parser. Each recipe carries a full ingredient array:
@@ -70,13 +102,11 @@ Sort is by recently added (default) or cook time.
 
 Categories are aisle-shaped: `produce`, `dairy`, `pantry`, `protein`, `spices`, `bakery`. Ingredients overlap between recipes on purpose — onions, garlic, and olive oil recur throughout.
 
-**Nothing in the UI displays ingredients.** The data is there and unused. That is deliberate.
+Each recipe also carries a `blurb`, ordered `steps`, and a `hue` that seeds its generated hero art.
 
 ## Deliberately not built
 
-No second page. No add, edit, or delete. No recipe detail view. No ingredient display. No link parsing or extraction. No search, settings, auth, or image uploads. No dark mode.
-
-One page and a nav is the whole app.
+No second page. No add, edit, or delete. No link parsing or extraction. No search, settings, auth, or image uploads. No photographs — the hero art is generated from each recipe's hue, so the app makes no network requests at all.
 
 ## License
 

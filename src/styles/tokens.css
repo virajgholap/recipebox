@@ -4,15 +4,22 @@
  * Every component in src/components reads from these. Nothing hardcodes a hex
  * value, a radius, or a spacing step of its own. Change a token here and it
  * changes everywhere.
+ *
+ * Colour is defined twice: the light ramp on :root, and a dark override under
+ * both [data-theme='dark'] and prefers-color-scheme. Components never know
+ * which is active — they only ever read the semantic name.
  */
 
 :root {
   /* Surface + text ------------------------------------------------------ */
   --color-canvas: #faf8f5;
+  --color-canvas-deep: #f2ede5;
   --color-surface: #ffffff;
-  --color-surface-sunken: #f3efe9;
-  --color-border: #e6e0d7;
-  --color-border-strong: #d4ccbf;
+  --color-surface-sunken: #f4f0ea;
+  --color-surface-raised: #ffffff;
+  --color-border: #e7e1d8;
+  --color-border-strong: #d5cdc0;
+  --color-overlay: rgba(31, 27, 22, 0.42);
 
   --color-text: #1f1b16;
   --color-text-muted: #6b6459;
@@ -23,6 +30,7 @@
   --color-accent: #b4442a;
   --color-accent-hover: #98351f;
   --color-accent-soft: #fbeee9;
+  --color-accent-text: #b4442a;
 
   /* Status ramps — the four Badge variants live here --------------------- */
   --color-success-bg: #e6f2e9;
@@ -44,6 +52,13 @@
   /* Focus --------------------------------------------------------------- */
   --color-focus-ring: #7f9fd4;
 
+  /* Recipe hero art ----------------------------------------------------- */
+  /* Each recipe sets --recipe-hue; the art is generated from it. */
+  --hero-saturation: 46%;
+  --hero-light-1: 88%;
+  --hero-light-2: 76%;
+  --hero-light-3: 94%;
+
   /* Spacing scale ------------------------------------------------------- */
   --space-1: 4px;
   --space-2: 8px;
@@ -58,6 +73,7 @@
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
+  --radius-xl: 22px;
   --radius-pill: 999px;
 
   /* Type ---------------------------------------------------------------- */
@@ -68,27 +84,84 @@
   --text-xs: 12px;
   --text-sm: 13px;
   --text-base: 15px;
+  --text-md: 16px;
   --text-lg: 18px;
   --text-xl: 22px;
   --text-2xl: 30px;
+  --text-3xl: 38px;
 
   --weight-regular: 400;
   --weight-medium: 500;
   --weight-semibold: 600;
 
-  --leading-tight: 1.2;
-  --leading-normal: 1.5;
+  --leading-tight: 1.15;
+  --leading-snug: 1.35;
+  --leading-normal: 1.55;
+  --leading-relaxed: 1.7;
 
   /* Elevation ----------------------------------------------------------- */
   --shadow-sm: 0 1px 2px rgba(31, 27, 22, 0.05);
-  --shadow-md: 0 2px 8px rgba(31, 27, 22, 0.07);
-  --shadow-lg: 0 8px 24px rgba(31, 27, 22, 0.1);
+  --shadow-md: 0 2px 10px rgba(31, 27, 22, 0.08);
+  --shadow-lg: 0 12px 32px rgba(31, 27, 22, 0.12);
+  --shadow-xl: 0 24px 64px rgba(31, 27, 22, 0.22);
 
   /* Motion -------------------------------------------------------------- */
-  --transition-fast: 120ms ease;
-  --transition-base: 180ms ease;
+  --transition-fast: 120ms cubic-bezier(0.2, 0, 0, 1);
+  --transition-base: 200ms cubic-bezier(0.2, 0, 0, 1);
+  --transition-slow: 320ms cubic-bezier(0.2, 0, 0, 1);
 
   /* Layout -------------------------------------------------------------- */
-  --layout-max-width: 1120px;
+  --layout-max-width: 1160px;
   --layout-gutter: var(--space-5);
+}
+
+/* Dark ------------------------------------------------------------------ */
+
+:root[data-theme='dark'] {
+  --color-canvas: #17140f;
+  --color-canvas-deep: #100e0a;
+  --color-surface: #211d17;
+  --color-surface-sunken: #2a251e;
+  --color-surface-raised: #272219;
+  --color-border: #342e26;
+  --color-border-strong: #473f34;
+  --color-overlay: rgba(8, 6, 4, 0.66);
+
+  --color-text: #f4efe6;
+  --color-text-muted: #b1a795;
+  --color-text-subtle: #8b8271;
+  --color-text-inverse: #17140f;
+
+  --color-accent: #e0714f;
+  --color-accent-hover: #ee8563;
+  --color-accent-soft: #35201a;
+  --color-accent-text: #f0906f;
+
+  --color-success-bg: #1c3324;
+  --color-success-fg: #8fd3a6;
+  --color-success-border: #2c4c37;
+
+  --color-warning-bg: #3a2c14;
+  --color-warning-fg: #e6bd76;
+  --color-warning-border: #55411f;
+
+  --color-info-bg: #1b2a3d;
+  --color-info-fg: #9dc0e8;
+  --color-info-border: #2c405a;
+
+  --color-neutral-bg: #2b261f;
+  --color-neutral-fg: #b7ad9b;
+  --color-neutral-border: #3d372e;
+
+  --color-focus-ring: #8fb2e6;
+
+  --hero-saturation: 34%;
+  --hero-light-1: 26%;
+  --hero-light-2: 18%;
+  --hero-light-3: 32%;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 2px 10px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.6);
 }

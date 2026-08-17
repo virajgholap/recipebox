@@ -5,9 +5,9 @@ import './Nav.css'
  * Nav
  *
  * The app bar. `items` is a list of `{ id, label }`; the one matching
- * `activeId` renders as current.
+ * `activeId` renders as current. `actions` is a right-side slot.
  */
-export default function Nav({ items = [], activeId, onNavigate }) {
+export default function Nav({ items = [], activeId, onNavigate, actions }) {
   return (
     <nav className="nav" aria-label="Main">
       <div className="layout nav__inner">
@@ -35,6 +35,8 @@ export default function Nav({ items = [], activeId, onNavigate }) {
             )
           })}
         </ul>
+
+        {actions ? <div className="nav__actions">{actions}</div> : null}
       </div>
     </nav>
   )

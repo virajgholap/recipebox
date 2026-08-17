@@ -2,6 +2,16 @@
   padding-bottom: var(--space-8);
 }
 
+/* The filter row follows you down the grid — with twelve cards you are always
+   within a scroll of wanting to change it. */
+.my-recipes__controls {
+  position: sticky;
+  top: 60px;
+  z-index: 5;
+  background-color: color-mix(in srgb, var(--color-canvas) 90%, transparent);
+  backdrop-filter: blur(8px);
+}
+
 .my-recipes__count {
   margin-bottom: var(--space-4);
   color: var(--color-text-subtle);
@@ -10,14 +20,29 @@
 
 .my-recipes__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(258px, 1fr));
   gap: var(--space-5);
 }
 
 .my-recipes__grid-item {
   display: flex;
+  animation: card-in var(--transition-slow) both;
+  animation-delay: var(--stagger, 0ms);
 }
 
 .my-recipes__grid-item > * {
   flex: 1;
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .my-recipes__grid-item {
+    animation: none;
+  }
 }

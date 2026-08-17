@@ -3,6 +3,7 @@ import PageHeader from '../components/PageHeader'
 import FilterBar from '../components/FilterBar'
 import SortControl from '../components/SortControl'
 import RecipeCard from '../components/RecipeCard'
+import RecipeDetail from '../components/RecipeDetail'
 import EmptyState from '../components/EmptyState'
 import recipes from '../data/recipes'
 import { SORT_OPTIONS, filterAndSortRecipes, getTagOptions } from '../lib/recipes'
@@ -11,6 +12,7 @@ import './MyRecipes.css'
 export default function MyRecipes() {
   const [activeTags, setActiveTags] = useState([])
   const [sort, setSort] = useState('recent')
+  const [openRecipe, setOpenRecipe] = useState(null)
 
   const tagOptions = useMemo(() => getTagOptions(recipes), [])
   const visible = useMemo(
@@ -42,7 +44,9 @@ export default function MyRecipes() {
         }
       />
 
-      <FilterBar options={tagOptions} values={activeTags} onToggle={handleToggleTag} />
+      <div className="my-recipes__controls">
+        <FilterBar options={tagOptions} values={activeTags} onToggle={handleToggleTag} />
+      </div>
 
       {visible.length > 0 ? (
         <>
@@ -52,9 +56,13 @@ export default function MyRecipes() {
           </p>
 
           <ul className="my-recipes__grid">
-            {visible.map((recipe) => (
-              <li key={recipe.id} className="my-recipes__grid-item">
-                <RecipeCard recipe={recipe} />
+            {visible.map((recipe, index) => (
+              <li
+                key={recipe.id}
+                className="my-recipes__grid-item"
+                style={{ '--stagger': `${Math.min(index, 11) * 28}ms` }}
+              >
+                <RecipeCard recipe={recipe} onOpen={setOpenRecipe} />
               </li>
             ))}
           </ul>
@@ -68,6 +76,14 @@ export default function MyRecipes() {
           onAction={() => setActiveTags([])}
         />
       )}
+
+      {openRecipe ? (
+        <RecipeDetail
+          key={openRecipe.id}
+          recipe={openRecipe}
+          onClose={() => setOpenRecipe(null)}
+        />
+      ) : null}
     </main>
   )
 }
