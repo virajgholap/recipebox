@@ -137,4 +137,6 @@ No second page. No add, edit, or delete. No link parsing or extraction. No searc
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+Code is MIT — see [LICENSE](LICENSE).
+
+The photographs are not. They are third-party works under their own Creative Commons licences and several require credit; every one is listed in [ATTRIBUTION.md](ATTRIBUTION.md). Fork the code freely, but either keep that file or swap the photos for your own.
