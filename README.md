@@ -104,9 +104,21 @@ Categories are aisle-shaped: `produce`, `dairy`, `pantry`, `protein`, `spices`, 
 
 Each recipe also carries a `blurb`, ordered `steps`, and a `hue` that seeds its generated hero art.
 
+## Photos
+
+Each recipe has a real photograph in `src/assets/recipes/`, sourced from Wikimedia Commons and committed to the repo — so the app still makes no network requests at runtime.
+
+They are **not** MIT like the rest of this repo. Each carries its own CC licence and most require credit. Every one is listed with photographer, licence, and source in [ATTRIBUTION.md](ATTRIBUTION.md). If you swap a photo, update that file in the same commit.
+
+Underneath each photo is the generated gradient, seeded from the recipe's `hue`. It is what shows while the image decodes, and the whole hero for any recipe without a photo — so a missing image degrades to something deliberate rather than a grey box.
+
+## The mix
+
+Ten of the twelve recipes are vegetarian. The two that aren't are Garlic Butter Shrimp Scampi and Birria-Style Beef Tacos. Cuisines skew Indian and Mexican among the vegetarian ones — chana masala, dal makhani, enchiladas verdes, black bean tacos.
+
 ## Deliberately not built
 
-No second page. No add, edit, or delete. No link parsing or extraction. No search, settings, auth, or image uploads. No photographs — the hero art is generated from each recipe's hue, so the app makes no network requests at all.
+No second page. No add, edit, or delete. No link parsing or extraction. No search, settings, auth, or image uploads.
 
 ## License
 
