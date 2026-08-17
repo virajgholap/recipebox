@@ -47,19 +47,18 @@ export default function MyRecipes() {
   useEffect(() => {
     let active = true
 
-    if (!user) {
-      setMine([])
-      return undefined
-    }
+    // Signed out resolves to an empty list rather than an early setState, so
+    // there is one place that writes this state instead of two.
+    const load = user ? fetchUserRecipes(user.id) : Promise.resolve([])
 
-    fetchUserRecipes(user.id).then((recipes) => {
+    load.then((recipes) => {
       if (active) setMine(recipes)
     })
 
     return () => {
       active = false
     }
-  }, [user?.id])
+  }, [user])
 
   // Yours first, so a recipe you just added is not buried under twenty others.
   const allRecipes = useMemo(() => [...mine, ...catalogue], [mine, catalogue])

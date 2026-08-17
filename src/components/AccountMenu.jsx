@@ -41,7 +41,6 @@ export default function AccountMenu() {
     }
   }, [open])
 
-  if (!isConfigured) return null
   if (loading) return <span className="account-menu__placeholder" aria-hidden="true" />
 
   if (!user) {

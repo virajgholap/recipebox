@@ -41,6 +41,29 @@ export default function useRecipeProgress(recipe) {
   // with rows we just read out of the database.
   const hydrating = useRef(false)
 
+  // Declared before the effects that call it. It used to sit below them, which
+  // worked only because effect bodies run after render — a temporal dead zone
+  // waiting for the first person to move code around.
+  const persist = useCallback(
+    async (next) => {
+      if (!user) return
+
+      const { error } = await supabase.from('recipe_progress').upsert(
+        {
+          user_id: user.id,
+          recipe_id: recipe.id,
+          servings: next.servings,
+          checked_ingredients: next.checked,
+          completed_steps: next.done,
+        },
+        { onConflict: 'user_id,recipe_id' },
+      )
+
+      if (error) console.warn('[recipe-box] Could not save progress:', error.message)
+    },
+    [user, recipe.id],
+  )
+
   // Pull the server copy once we know who the user is.
   useEffect(() => {
     if (!user) return undefined
@@ -85,26 +108,6 @@ export default function useRecipeProgress(recipe) {
     // hydrate, not a subscription to local edits.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id, recipe.id])
-
-  const persist = useCallback(
-    async (next) => {
-      if (!user) return
-
-      const { error } = await supabase.from('recipe_progress').upsert(
-        {
-          user_id: user.id,
-          recipe_id: recipe.id,
-          servings: next.servings,
-          checked_ingredients: next.checked,
-          completed_steps: next.done,
-        },
-        { onConflict: 'user_id,recipe_id' },
-      )
-
-      if (error) console.warn('[recipe-box] Could not save progress:', error.message)
-    },
-    [user, recipe.id],
-  )
 
   // Cache locally on every change; debounce the network write so ticking six
   // ingredients in a row is one request rather than six.

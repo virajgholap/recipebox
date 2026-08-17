@@ -19,6 +19,11 @@ jobs:
 
       - run: npm ci
 
+      # First, because it is the check that would have caught the undefined
+      # variable that took production down.
+      - name: Lint
+        run: npx eslint .
+
       - name: Tests
         run: npx vitest run
 
