@@ -1,0 +1,31 @@
+.auth-callback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  min-height: calc(100vh - 60px);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.auth-callback__spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--color-border-strong);
+  border-top-color: var(--color-accent);
+  border-radius: var(--radius-pill);
+  animation: auth-spin 700ms linear infinite;
+}
+
+@keyframes auth-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-callback__spinner {
+    animation-duration: 2s;
+  }
+}

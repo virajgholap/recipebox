@@ -2,6 +2,32 @@
   padding-bottom: var(--space-8);
 }
 
+/* The filter row follows you down the grid — with twenty cards you are always
+   within a scroll of wanting to change it. */
+.my-recipes__controls {
+  position: sticky;
+  top: 60px;
+  z-index: 5;
+  padding-top: var(--space-2);
+  background-color: color-mix(in srgb, var(--color-canvas) 90%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.my-recipes__cuisines {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.my-recipes__controls-label {
+  color: var(--color-text-subtle);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
 .my-recipes__count {
   margin-bottom: var(--space-4);
   color: var(--color-text-subtle);
@@ -10,14 +36,45 @@
 
 .my-recipes__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(258px, 1fr));
   gap: var(--space-5);
 }
 
 .my-recipes__grid-item {
   display: flex;
+  animation: card-in var(--transition-slow) both;
+  animation-delay: var(--stagger, 0ms);
 }
 
 .my-recipes__grid-item > * {
   flex: 1;
+}
+
+/* Same footprint as a real card, so the grid does not jump when data lands. */
+.my-recipes__skeleton {
+  height: 340px;
+  background-color: var(--color-surface-sunken);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes skeleton-pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .my-recipes__grid-item,
+  .my-recipes__skeleton {
+    animation: none;
+  }
 }
