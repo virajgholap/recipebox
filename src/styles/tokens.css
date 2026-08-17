@@ -54,10 +54,10 @@
 
   /* Recipe hero art ----------------------------------------------------- */
   /* Each recipe sets --recipe-hue; the art is generated from it. */
-  --hero-saturation: 46%;
-  --hero-light-1: 88%;
-  --hero-light-2: 76%;
-  --hero-light-3: 94%;
+  --hero-saturation: 54%;
+  --hero-light-1: 80%;
+  --hero-light-2: 64%;
+  --hero-light-3: 89%;
 
   /* Spacing scale ------------------------------------------------------- */
   --space-1: 4px;
