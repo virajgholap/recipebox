@@ -9,7 +9,10 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "seed:generate": "node scripts/generate-seed.mjs"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "seed:generate": "node scripts/generate-seed.mjs",
+    "images:generate": "node scripts/generate-image-sizes.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.3",
@@ -19,6 +22,8 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
-    "vite": "^6.0.0"
+    "sharp": "^0.35.3",
+    "vite": "^6.0.0",
+    "vitest": "^4.1.10"
   }
 }

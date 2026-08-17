@@ -1,4 +1,5 @@
 import { Component } from 'react'
+import { report } from '../lib/monitoring'
 import './ErrorBoundary.css'
 
 /**
@@ -18,9 +19,7 @@ export default class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, info) {
-    // Where a real monitoring service would go. Until one exists, the console
-    // is the only record, so keep it useful.
-    console.error('[recipe-box] Uncaught render error:', error, info?.componentStack)
+    report(error, { kind: 'render', componentStack: info?.componentStack })
   }
 
   handleReset = () => {

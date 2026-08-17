@@ -1,60 +1,58 @@
 /**
  * Recipe photography.
  *
- * Imported rather than referenced by path so Vite fingerprints and bundles
- * them. Every file is openly licensed and credited in ATTRIBUTION.md at the
- * repo root — if you add or swap a photo, add the credit in the same commit.
+ * Discovered with import.meta.glob rather than twenty hand-written imports.
+ * Adding a photo used to mean editing this file as well, and forgetting meant
+ * the recipe silently fell back to its gradient. Now dropping a file into
+ * src/assets/recipes named after the recipe id is the whole job.
  *
- * These stay bundled with the app rather than living in Supabase Storage:
- * they never change per user, they cache forever behind a content hash, and
- * it keeps the page working with no network round trip for images.
+ * Three widths per photo — 400w, 800w, and the 1200w original — so a phone
+ * showing a 300px card downloads a 400px image instead of a 1200px one.
+ * Regenerate variants with `npm run images:generate` after adding photos.
  *
- * A missing entry is not an error: RecipeHero falls back to its generated
+ * Every file is openly licensed and credited in ATTRIBUTION.md. If you add or
+ * swap a photo, add the credit in the same commit.
+ *
+ * These stay bundled rather than living in Supabase Storage: they never change
+ * per user, they cache forever behind a content hash, and the page needs no
+ * network round trip for them.
+ *
+ * A missing entry is not an error — RecipeHero falls back to its generated
  * gradient, so a recipe without a photo still looks deliberate.
  */
 
-import alooGobi from '../assets/recipes/aloo-gobi.jpg'
-import baingaBharta from '../assets/recipes/baingan-bharta.jpg'
-import birriaStyleBeefTacos from '../assets/recipes/birria-style-beef-tacos.jpg'
-import blackBeanEnchiladasVerdes from '../assets/recipes/black-bean-enchiladas-verdes.jpg'
-import butterChicken from '../assets/recipes/butter-chicken.jpg'
-import chanaMasala from '../assets/recipes/chana-masala.jpg'
-import charredCornBlackBeanTacos from '../assets/recipes/charred-corn-black-bean-tacos.jpg'
-import chilesRellenos from '../assets/recipes/chiles-rellenos.jpg'
-import crispyChickpeaShakshuka from '../assets/recipes/crispy-chickpea-shakshuka.jpg'
-import dalMakhani from '../assets/recipes/dal-makhani.jpg'
-import garlicButterShrimpScampi from '../assets/recipes/garlic-butter-shrimp-scampi.jpg'
-import lambRoganJosh from '../assets/recipes/lamb-rogan-josh.jpg'
-import masalaDosa from '../assets/recipes/masala-dosa.jpg'
-import noKneadRosemaryFocaccia from '../assets/recipes/no-knead-rosemary-focaccia.jpg'
-import overnightCinnamonRolls from '../assets/recipes/overnight-cinnamon-rolls.jpg'
-import palakPaneer from '../assets/recipes/palak-paneer.jpg'
-import paneerTikkaMasala from '../assets/recipes/paneer-tikka-masala.jpg'
-import pavBhaji from '../assets/recipes/pav-bhaji.jpg'
-import rajmaChawal from '../assets/recipes/rajma-chawal.jpg'
-import vegetableBiryani from '../assets/recipes/vegetable-biryani.jpg'
+const files = import.meta.glob('../assets/recipes/*.jpg', { eager: true, import: 'default' })
 
-export const recipeImages = {
-  'aloo-gobi': alooGobi,
-  'baingan-bharta': baingaBharta,
-  'birria-style-beef-tacos': birriaStyleBeefTacos,
-  'black-bean-enchiladas-verdes': blackBeanEnchiladasVerdes,
-  'butter-chicken': butterChicken,
-  'chana-masala': chanaMasala,
-  'charred-corn-black-bean-tacos': charredCornBlackBeanTacos,
-  'chiles-rellenos': chilesRellenos,
-  'crispy-chickpea-shakshuka': crispyChickpeaShakshuka,
-  'dal-makhani': dalMakhani,
-  'garlic-butter-shrimp-scampi': garlicButterShrimpScampi,
-  'lamb-rogan-josh': lambRoganJosh,
-  'masala-dosa': masalaDosa,
-  'no-knead-rosemary-focaccia': noKneadRosemaryFocaccia,
-  'overnight-cinnamon-rolls': overnightCinnamonRolls,
-  'palak-paneer': palakPaneer,
-  'paneer-tikka-masala': paneerTikkaMasala,
-  'pav-bhaji': pavBhaji,
-  'rajma-chawal': rajmaChawal,
-  'vegetable-biryani': vegetableBiryani,
+const ORIGINAL_WIDTH = 1200
+
+const byId = {}
+
+for (const [path, url] of Object.entries(files)) {
+  const filename = path.split('/').pop()
+  const match = filename.match(/^(.+?)(?:-(\d+)w)?\.jpg$/)
+  if (!match) continue
+
+  const [, id, width] = match
+  byId[id] ??= { original: null, variants: [] }
+
+  if (width) byId[id].variants.push({ url, width: Number(width) })
+  else byId[id].original = url
 }
+
+/** `{ [recipeId]: { src, srcSet } }`. srcSet is null when there are no variants. */
+export const recipeImages = Object.fromEntries(
+  Object.entries(byId).map(([id, entry]) => {
+    const all = [...entry.variants]
+    if (entry.original) all.push({ url: entry.original, width: ORIGINAL_WIDTH })
+    all.sort((a, b) => a.width - b.width)
+
+    // Fall back to the widest variant if the original is somehow absent, so a
+    // half-populated folder still renders something.
+    const src = entry.original ?? all[all.length - 1]?.url ?? null
+    const srcSet = all.length > 1 ? all.map(({ url, width }) => `${url} ${width}w`).join(', ') : null
+
+    return [id, { src, srcSet }]
+  }),
+)
 
 export default recipeImages

@@ -71,6 +71,11 @@ a {
   padding: 0 var(--layout-gutter);
 }
 
+/* Holds the page height steady while a lazy route chunk loads. */
+.route-fallback {
+  min-height: 60vh;
+}
+
 /* Visually hidden but available to screen readers. */
 .sr-only {
   position: absolute;
