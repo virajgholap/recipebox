@@ -1,0 +1,23 @@
+.my-recipes {
+  padding-bottom: var(--space-8);
+}
+
+.my-recipes__count {
+  margin-bottom: var(--space-4);
+  color: var(--color-text-subtle);
+  font-size: var(--text-sm);
+}
+
+.my-recipes__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-5);
+}
+
+.my-recipes__grid-item {
+  display: flex;
+}
+
+.my-recipes__grid-item > * {
+  flex: 1;
+}
