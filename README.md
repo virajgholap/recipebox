@@ -119,9 +119,11 @@ Each recipe also carries a `blurb`, ordered `steps`, and a `hue` that seeds its 
 
 ## Photos
 
-Each recipe has a real photograph in `src/assets/recipes/`, sourced from Wikimedia Commons and committed to the repo — so the app still makes no network requests at runtime.
+Each recipe has a real photograph in `src/assets/recipes/`, from Pexels and committed to the repo — so the app makes no network requests for images at runtime.
 
-They are **not** MIT like the rest of this repo. Each carries its own CC licence and most require credit. Every one is listed with photographer, licence, and source in [ATTRIBUTION.md](ATTRIBUTION.md). If you swap a photo, update that file in the same commit.
+Every displayed image goes through one treatment (`npm run images:generate`): a uniform 3:2 crop weighted toward the food, normalised exposure, saturation pulled back, and three widths for `srcset`. Photos taken by different people in different kitchens otherwise read as a jumble rather than a set. The untouched original stays on disk as the source of truth but is never served.
+
+The [Pexels licence](https://www.pexels.com/license/) permits free use, including commercially, and requires no attribution. Photographers are credited in [ATTRIBUTION.md](ATTRIBUTION.md) as a courtesy.
 
 Underneath each photo is the generated gradient, seeded from the recipe's `hue`. It is what shows while the image decodes, and the whole hero for any recipe without a photo — so a missing image degrades to something deliberate rather than a grey box.
 
@@ -139,4 +141,4 @@ No second page. No add, edit, or delete. No link parsing or extraction. No searc
 
 Code is MIT — see [LICENSE](LICENSE).
 
-The photographs are not. They are third-party works under their own Creative Commons licences and several require credit; every one is listed in [ATTRIBUTION.md](ATTRIBUTION.md). Fork the code freely, but either keep that file or swap the photos for your own.
+The photographs are from Pexels, under the [Pexels licence](https://www.pexels.com/license/) — free to use, including commercially, no attribution required. Photographers are credited in [ATTRIBUTION.md](ATTRIBUTION.md) anyway. Fork freely.

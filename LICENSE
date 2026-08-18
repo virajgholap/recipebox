@@ -2,11 +2,11 @@ MIT License
 
 Copyright (c) 2026 Viraj Gholap
 
-NOTE: This licence covers the source code only. The photographs in
-src/assets/recipes/ are third-party works under their own Creative Commons
-licences (CC0, CC BY, and CC BY-SA), and several of them require attribution.
-Each one is credited in ATTRIBUTION.md. If you fork this repository, keep that
-file, or replace the photographs with your own.
+NOTE: This licence covers the source code. The photographs in
+src/assets/recipes/ come from Pexels and are governed by the Pexels licence
+(https://www.pexels.com/license/), which permits free use including
+commercially and does not require attribution. The photographers are credited
+in ATTRIBUTION.md as a courtesy rather than an obligation.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
