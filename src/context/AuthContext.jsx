@@ -15,6 +15,28 @@ const AuthContext = createContext(null)
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null)
   const [loading, setLoading] = useState(isSupabaseConfigured)
+  const [googleEnabled, setGoogleEnabled] = useState(false)
+
+  /**
+   * Ask the project which providers are actually turned on.
+   *
+   * Offering a Google button on a project with no Google credentials produces
+   * "Unsupported provider: provider is not enabled" — a dead end the user can
+   * do nothing about. This makes the button self-configuring: hidden until
+   * Google is enabled in the dashboard, visible the moment it is, with no
+   * redeploy in between.
+   */
+  useEffect(() => {
+    if (!isSupabaseConfigured) return
+
+    const url = import.meta.env.VITE_SUPABASE_URL
+    const key = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+    fetch(`${url}/auth/v1/settings`, { headers: { apikey: key } })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((settings) => setGoogleEnabled(Boolean(settings?.external?.google)))
+      .catch(() => setGoogleEnabled(false))
+  }, [])
 
   useEffect(() => {
     if (!isSupabaseConfigured) return undefined
@@ -100,6 +122,7 @@ export function AuthProvider({ children }) {
       user,
       loading,
       isConfigured: isSupabaseConfigured,
+      googleEnabled,
       // Google puts these in user_metadata; email signups have neither.
       displayName:
         user?.user_metadata?.full_name ??
@@ -119,6 +142,7 @@ export function AuthProvider({ children }) {
       session,
       user,
       loading,
+      googleEnabled,
       signUpWithEmail,
       signInWithEmail,
       signInWithGoogle,
