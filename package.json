@@ -13,7 +13,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "seed:generate": "node scripts/generate-seed.mjs",
-    "images:generate": "node scripts/generate-image-sizes.mjs"
+    "images:generate": "node scripts/generate-image-sizes.mjs",
+    "og:generate": "node scripts/generate-og-image.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.3",
