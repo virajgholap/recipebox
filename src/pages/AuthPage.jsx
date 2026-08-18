@@ -61,8 +61,16 @@ export default function AuthPage({ mode = 'login' }) {
     setError(null)
     setBusy(true)
     const { error: oauthError } = await signInWithGoogle()
+
     if (oauthError) {
-      setError(oauthError.message)
+      // Supabase says "Unsupported provider: provider is not enabled", which
+      // is accurate and useless to whoever is looking at it. It only ever
+      // means the project has no Google credentials configured.
+      setError(
+        /provider is not enabled|unsupported provider/i.test(oauthError.message)
+          ? 'Google sign-in is not set up on this project yet. Use email and password below.'
+          : oauthError.message,
+      )
       setBusy(false)
     }
     // On success the browser leaves for Google, so there is nothing to reset.
