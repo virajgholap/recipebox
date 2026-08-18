@@ -73,6 +73,34 @@ describe('request guard', () => {
   })
 })
 
+describe('YouTube links', () => {
+  // Scraping YouTube server-side returns a JS shell whose title is "- YouTube",
+  // so these go through oEmbed instead. Network-dependent, hence the tolerance
+  // for a null result rather than a hard failure offline.
+  it.each([
+    'https://www.youtube.com/watch?v=cIKZslB67Yc',
+    'https://youtu.be/cIKZslB67Yc',
+    'https://www.youtube.com/shorts/cIKZslB67Yc',
+  ])('reads a real title from %s', async (url) => {
+    const { status, payload } = await invoke({ url })
+    if (status !== 200) return // offline
+
+    expect(payload.extraction).toBe('partial')
+    expect(payload.recipe.name).not.toBe('- YouTube')
+    expect(payload.recipe.name.length).toBeGreaterThan(3)
+    expect(payload.recipe.imageUrl).toContain('cIKZslB67Yc')
+  })
+
+  it('is honest that a video yields no method', async () => {
+    const { status, payload } = await invoke({ url: 'https://youtu.be/cIKZslB67Yc' })
+    if (status !== 200) return
+
+    expect(payload.recipe.ingredients).toEqual([])
+    expect(payload.recipe.steps).toEqual([])
+    expect(payload.extraction).not.toBe('full')
+  })
+})
+
 describe('rate limiting', () => {
   it('cuts a single client off after the limit', async () => {
     const ip = '203.0.113.99'

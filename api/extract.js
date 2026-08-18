@@ -71,6 +71,15 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'That does not look like a valid http(s) link.' })
   }
 
+  // YouTube serves a JavaScript shell to server-side requests: the <title> is
+  // empty and the og: tags are filled in by the browser, so scraping it yields
+  // "- YouTube" and nothing else. oEmbed is a public, keyless endpoint that
+  // returns the real title, channel, and thumbnail from any IP.
+  const oembed = await tryYouTubeOembed(target)
+  if (oembed) {
+    return res.status(200).json({ recipe: { ...oembed, sourceUrl: target.href }, extraction: 'partial' })
+  }
+
   let html
   try {
     html = await fetchWithLimit(target)
@@ -128,6 +137,66 @@ function safeUrl(raw) {
     host.endsWith('.local')
 
   return blocked ? null : parsed
+}
+
+/** The eleven-character video id, from either youtube.com or youtu.be. */
+function youtubeVideoId(target) {
+  const host = target.hostname.toLowerCase().replace(/^www\./, '')
+
+  if (host === 'youtu.be') return target.pathname.slice(1).split('/')[0] || null
+
+  if (host === 'youtube.com' || host === 'm.youtube.com' || host === 'music.youtube.com') {
+    if (target.pathname === '/watch') return target.searchParams.get('v')
+    const short = target.pathname.match(/^\/(?:shorts|embed|live)\/([^/]+)/)
+    if (short) return short[1]
+  }
+
+  return null
+}
+
+/**
+ * Returns a partial recipe for a YouTube link, or null for anything else (and
+ * for YouTube itself if oEmbed is unavailable, so the generic path still runs).
+ */
+async function tryYouTubeOembed(target) {
+  const id = youtubeVideoId(target)
+  if (!id) return null
+
+  const endpoint = `https://www.youtube.com/oembed?url=${encodeURIComponent(
+    `https://www.youtube.com/watch?v=${id}`,
+  )}&format=json`
+
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS)
+
+  try {
+    const response = await fetch(endpoint, {
+      signal: controller.signal,
+      headers: { 'user-agent': BROWSER_UA },
+    })
+    if (!response.ok) return null
+
+    const data = await response.json()
+    if (!data?.title) return null
+
+    return {
+      name: String(data.title).slice(0, 160),
+      // The channel is the most useful thing available: a video has no
+      // description worth storing and no method that can be read.
+      blurb: data.author_name ? `From ${data.author_name} on YouTube.` : '',
+      servings: null,
+      cookTimeMinutes: null,
+      ingredients: [],
+      steps: [],
+      // hqdefault rather than maxresdefault: maxres 404s on plenty of videos.
+      imageUrl: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+      siteName: 'YouTube',
+    }
+  } catch {
+    return null
+  } finally {
+    clearTimeout(timer)
+  }
 }
 
 async function fetchWithLimit(target) {
