@@ -28,17 +28,37 @@ const base = {
 }
 
 describe('the seed catalogue', () => {
-  it('is the twenty recipes with the split we promised', () => {
-    expect(recipes).toHaveLength(20)
-
+  // Asserted as the brief was stated, not as a snapshot of today's numbers:
+  // twelve Indian, four Mexican, the rest anything, and at least 80%
+  // vegetarian. Adding recipes should not break these; breaking the brief
+  // should.
+  it('keeps twelve Indian and four Mexican', () => {
     const byCuisine = recipes.reduce(
       (acc, r) => ({ ...acc, [r.cuisine]: (acc[r.cuisine] ?? 0) + 1 }),
       {},
     )
-    expect(byCuisine).toEqual({ indian: 12, mexican: 4, other: 4 })
+    expect(byCuisine.indian).toBe(12)
+    expect(byCuisine.mexican).toBe(4)
+  })
 
+  it('stays at or above 80% vegetarian', () => {
     const veg = recipes.filter((r) => r.tags.includes('vegetarian')).length
-    expect(veg).toBe(16)
+    expect(veg / recipes.length).toBeGreaterThanOrEqual(0.8)
+  })
+
+  it('has the three salads, spread across the top two rows rather than stacked', () => {
+    const salads = recipes.filter((r) => r.tags.includes('salad'))
+    expect(salads).toHaveLength(3)
+
+    // Eight cards fill the first two rows on a wide screen.
+    const topTwoRows = filterAndSortRecipes(recipes, { sort: 'recent' }).slice(0, 8)
+    const positions = salads.map((s) => topTwoRows.findIndex((r) => r.id === s.id))
+
+    expect(positions.every((p) => p >= 0)).toBe(true)
+    // Not consecutive — something else sits between each of them.
+    const sorted = [...positions].sort((a, b) => a - b)
+    expect(sorted[1] - sorted[0]).toBeGreaterThan(1)
+    expect(sorted[2] - sorted[1]).toBeGreaterThan(1)
   })
 
   it('has no duplicate ids', () => {
@@ -164,12 +184,16 @@ describe('getSourceLink', () => {
 describe('getTagOptions', () => {
   it('leads with All and counts the whole collection', () => {
     const options = getTagOptions(recipes)
-    expect(options[0]).toEqual({ value: null, label: 'All', count: 20 })
+    expect(options[0]).toEqual({ value: null, label: 'All', count: recipes.length })
   })
 
-  it('counts vegetarian at sixteen', () => {
+  it('counts a tag against the data rather than a hardcoded number', () => {
     const veg = getTagOptions(recipes).find((o) => o.value === 'vegetarian')
-    expect(veg.count).toBe(16)
+    expect(veg.count).toBe(recipes.filter((r) => r.tags.includes('vegetarian')).length)
+  })
+
+  it('surfaces the salad tag so the new recipes are filterable', () => {
+    expect(getTagOptions(recipes).some((o) => o.value === 'salad')).toBe(true)
   })
 })
 

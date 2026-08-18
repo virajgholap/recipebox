@@ -40,5 +40,8 @@ Images are downsized to 1200px wide from the Commons originals; no other modific
 | Overnight Cinnamon Rolls | Andy Li | [CC0](https://creativecommons.org/publicdomain/zero/1.0/) | [Cinnamon Roll – Olea 2025-07-03](https://commons.wikimedia.org/wiki/File:Cinnamon_Roll_-_Olea_2025-07-03.jpg) |
 | No-Knead Rosemary Focaccia | Kurtkaiser | [CC0](https://creativecommons.org/publicdomain/zero/1.0/) | [Focaccia Bread.jpg](https://commons.wikimedia.org/wiki/File:Focaccia_Bread.jpg) |
 | Garlic Butter Shrimp Scampi | MaxMahem | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Shrimp Scampi.jpg](https://commons.wikimedia.org/wiki/File:Shrimp_Scampi.jpg) |
+| Chopped Greek Salad | Scudsvlad | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Horiatiki salad.jpg](https://commons.wikimedia.org/wiki/File:Horiatiki_salad.jpg) |
+| Kale Caesar with Crispy Chickpeas | Cajsa Lilliehook | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Kale & ChickPea Salad](https://commons.wikimedia.org/wiki/File:Kale_%26_ChickPea_Salad_(8425128977).jpg) |
+| Quinoa Tabbouleh | cyclonebill | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Flickr - cyclonebill - Tabbouleh.jpg](https://commons.wikimedia.org/wiki/File:Flickr_-_cyclonebill_-_Tabbouleh.jpg) |
 
 The photographs depict the dish in question; they are not photographs of the recipes in `src/data/recipes.js`, which are written for this demo.
