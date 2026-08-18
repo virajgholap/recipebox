@@ -23,8 +23,6 @@
 
 const files = import.meta.glob('../assets/recipes/*.jpg', { eager: true, import: 'default' })
 
-const ORIGINAL_WIDTH = 1200
-
 const byId = {}
 
 for (const [path, url] of Object.entries(files)) {
@@ -39,16 +37,20 @@ for (const [path, url] of Object.entries(files)) {
   else byId[id].original = url
 }
 
-/** `{ [recipeId]: { src, srcSet } }`. srcSet is null when there are no variants. */
+/**
+ * `{ [recipeId]: { src, srcSet } }`. srcSet is null when there are no variants.
+ *
+ * Only the generated widths are served. The untouched original is the source
+ * of truth on disk but never displayed — it has not been through the shared
+ * crop and colour treatment, so showing it would put one uncorrected photo in
+ * a grid of corrected ones. It is used only if a recipe has no variants at all.
+ */
 export const recipeImages = Object.fromEntries(
   Object.entries(byId).map(([id, entry]) => {
-    const all = [...entry.variants]
-    if (entry.original) all.push({ url: entry.original, width: ORIGINAL_WIDTH })
-    all.sort((a, b) => a.width - b.width)
+    const all = [...entry.variants].sort((a, b) => a.width - b.width)
 
-    // Fall back to the widest variant if the original is somehow absent, so a
-    // half-populated folder still renders something.
-    const src = entry.original ?? all[all.length - 1]?.url ?? null
+    const widest = all[all.length - 1]?.url ?? null
+    const src = widest ?? entry.original ?? null
     const srcSet = all.length > 1 ? all.map(({ url, width }) => `${url} ${width}w`).join(', ') : null
 
     return [id, { src, srcSet }]
